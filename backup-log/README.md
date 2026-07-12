@@ -1,6 +1,6 @@
 # BACKUP LOG
 
-Implementazione in Bash dello script **Back Log**. 
+Implementazione in Bash dello script **Backup Log**. 
 
 Lo script ha lo scopo di creare una cartella di backup contenente al suo interno un archivio compresso, che venga rinominato poi con un timestamp, dove viene indicato data e ora di creazione, un riepilogo di dimensione, numero e percorso dell'archivio creato.
 
