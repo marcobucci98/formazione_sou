@@ -1,0 +1,47 @@
+---
+
+#titolo
+- name: Variabili cifrate con Ansible Vault
+  
+# specifica su quali macchine eseguire il playbook.
+  hosts: localhost
+
+# esegue i comandi direttamente sulla macchina locale
+  connection: local 
+  
+# vengono caricate le variabili definite nel file cifrato "id.yml"
+  vars_files:
+    - id.yml
+
+#azioni da eseguire
+  tasks:
+
+    # titolo
+    - name: Mostra il nome
+      # modulo per la stampa dei messaggi
+      ansible.builtin.debug:
+        # stampa il testo e poi viene letta la variabile
+        msg: "Il nome è: {{ nome }}"
+      
+    # titolo
+    - name: Mostra il cognome
+      # modulo per la stampa dei messaggi
+      ansible.builtin.debug:
+        # stampa il testo e poi viene letta la variabile
+        msg: "Il cognome è: {{ cognome }}"
+      
+    # titolo
+    - name: Mostra l'età
+        # modulo per la stampa dei messaggi
+      ansible.builtin.debug:
+        # stampa il testo e poi viene letta la variabile
+        msg: "L'età è: {{ età }}"
+
+    # titolo  
+    - name: Mostra la città di nascita
+      # modulo per la stampa dei messaggi
+      ansible.builtin.debug:
+        # stampa il testo e poi viene letta la variabile
+        msg: "La città di nascita è: {{ città }}" 
+
+... 
