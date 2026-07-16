@@ -1,0 +1,116 @@
+#!/bin/bash
+
+echo "CLASSIFICATORE DI INDIRIZZI IPv4"
+
+while true
+do
+    # chiede l'input all'utente
+    read -p "Inserisci un indirizzo IPv4: " ip_utente
+
+    # mostra l'indirizzo inserito 
+    echo "Indirizzo inserito: $ip_utente"
+
+    struct="^(0|[1-9][0-9]{0,2})\.(0|[1-9][0-9]{0,2})\.(0|[1-9][0-9]{0,2})\.(0|[1-9][0-9]{0,2})$"
+
+    # costrutto per il confronto della struttura speculare
+    if [[ $ip_utente =~ $struct ]]; then
+
+        IFS='.' read -r o1 o2 o3 o4 <<< "$ip_utente"
+    
+        # verifica che nessuno dei 4 ottetti superi il valore di 255
+        if (( o1 <= 255 && o2 <= 255 && o3 <= 255 && o4 <= 255 )); then
+            echo "L'indirizzo IP $ip_utente è VALIDO"
+
+            # BROADCAST GENERALE
+            if (( o1 == 255 && o2 == 255 && o3 == 255 && o4 == 255 )); then
+                echo "L'indirizzo IP $ip_utente è l'indirizzo di Broadcast globale."
+
+            # CLASSE A (0.0.0.0 - 127.255.255.255)
+            elif (( o1 >= 0 && o1 <= 127 )); then
+                if (( o1 == 0 && o2 == 0 && o3 == 0 && o4 == 0 )); then
+                    echo "L'indirizzo IP $ip_utente è l'indirizzo di Default Route."    
+
+                elif (( o1 == 10 )); then
+                    echo "L'indirizzo IP $ip_utente è un indirizzo IP privato e appartiene alla Classe A."
+
+                elif (( o1 == 127 )); then 
+                    echo "L'indirizzo IP $ip_utente è un indirizzo IP di Loopback e appartiene alla Classe A." 
+
+                else
+                    echo "L'indirizzo IP $ip_utente è un indirizzo pubblico e appartiene alla Classe A."
+                fi
+            
+            # CLASSE B (128.0.0.0 - 191.255.255.255)
+            elif (( o1 >= 128 && o1 <= 191 )); then
+                if (( o1 == 172 && o2 >= 16 && o2 <= 31 )); then
+                    echo "L'indirizzo IP $ip_utente è un indirizzo IP privato e appartiene alla Classe B."
+
+                elif (( o1 == 169 && o2 == 254 )); then
+                    echo "L'indirizzo IP $ip_utente è un indirizzo IP appartenente alla Classe APIPA (Classe B)."
+
+                else
+                    echo "L'indirizzo IP $ip_utente è un indirizzo pubblico e appartiene alla Classe B."
+                fi   
+
+            # CLASSE C (192.0.0.0 - 223.255.255.255)
+            elif (( o1 >= 192 && o1 <= 223 )); then
+                if (( o1 == 192 && o2 == 168 )); then
+                    echo "L'indirizzo IP $ip_utente è un indirizzo IP privato e appartiene alla Classe C."
+
+                else
+                    echo "L'indirizzo IP $ip_utente è un indirizzo pubblico e appartiene alla Classe C."
+                fi
+
+            # CLASSE D - Multicast (224.0.0.0 - 239.255.255.255)
+            elif (( o1 >= 224 && o1 <= 239 )); then
+                echo "L'indirizzo IP $ip_utente è un indirizzo appartenente alla Classe D (Multicast)."
+
+            # CLASSE E - Sperimentale (240.0.0.0 - 255.255.255.254)
+            elif (( o1 >= 240 && o1 <= 255 )); then
+                echo "L'indirizzo IP $ip_utente è un indirizzo appartenente alla Classe E (Sperimentale)."
+            fi
+
+        else
+            # questa sezione intercetta se la stringa ha una struttura IP corretta 
+            # ma uno o più ottetti superano il valore 255. Usiamo l'operatore logico OR (||)
+            echo "L'indirizzo IP $ip_utente NON è VALIDO"
+
+            if (( o1 > 255 )); then 
+                echo "Il primo ottetto ($o1) supera il valore massimo di 255."; 
+            fi
+
+            if (( o2 > 255 )); then 
+                echo "Il secondo ottetto ($o2) supera il valore massimo di 255."; 
+            fi
+
+            if (( o3 > 255 )); then 
+                echo "Il terzo ottetto ($o3) supera il valore massimo di 255."; 
+            fi
+
+            if (( o4 > 255 )); then 
+                echo "Il quarto ottetto ($o4) supera il valore massimo di 255."; 
+            fi
+        fi
+
+    else
+        # se l'input non rispetta la struttura
+        echo "Struttura del testo inserito non valida come IPv4!"
+    fi
+
+    # gestione del ciclo 
+    read -p "Si vuole continuare l'interazione? Inserire y o n: " response
+
+    case "$response" in 
+        [Yy]* ) 
+            continue
+            ;; 
+        [Nn]* ) 
+            echo "Arrivederci!"
+            break
+            ;; 
+        * ) 
+            echo "Risposta non valida! Riprova."
+            continue
+            ;;
+    esac
+done
