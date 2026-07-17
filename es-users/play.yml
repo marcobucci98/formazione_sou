@@ -1,0 +1,48 @@
+--- 
+
+- name: Gestione degli utenti # titolo del Play
+  hosts: localhost # indica che il playbook deve essere eseguito sulla macchina locale 
+  connection: local # esegue i comandi direttamente in locale
+  
+  vars: # variabili
+    # specifiche
+    utenti: # lista degli utenti
+      - username: "m.rossi" # dizionario
+        group: "direzione" # gruppo primario 
+        groups: ["hr", "segreteria"] # gruppi secondari
+        shell: "/bin/bash" # specifica la shell
+        home: "/home/mrossi" # cartella personale
+        
+      - username: "f.bianchi" # dizionario
+        group: "hr" # gruppo primario
+        groups: ["direzione"] # gruppo secondario 
+        shell: "/bin/bash" # specifica la shell
+        home: "/home/fbianchi" # cartella personale
+        
+      - username: "g.verdi" # dizionario
+        group: "segreteria" # gruppo primario
+        groups: ["direzione", "hr"] # gruppi secondari 
+        shell: "/bin/bash" # specifica la shell
+        home: "/home/gverdi" # cartella personale
+
+  tasks: # azioni
+    - name: Gruppi secondari # titolo
+      ansible.builtin.group: # modulo
+        name: "{{ item }}" # assegna al gruppo il nome dell'elemento corrente preso dal ciclo
+        state: present # crea il gruppo
+      loop: "{{ utenti | map(attribute='groups') | flatten | unique }}" # legge la sezione groups, unifica ed elimina i duplicati
+
+    - name: Creazione degli utenti # titolo
+      ansible.builtin.user: # modulo
+        name: "{{ item.username }}" # imposta username
+        group: "{{ item.group }}" # imposta il gruppo primario
+        groups: "{{ item.groups }}" # imposta i gruppi secondari
+        shell: "{{ item.shell }}" # imposta la shell
+        home: "{{ item.home }}" # imposta la home 
+        state: present # verifica se l'utente esiste
+        append: true # aggiunge ai gruppi secondari
+      loop: "{{ utenti }}" # ripete per ogni utente
+      loop_control: # configurazione del ciclo
+        label: "{{ item.username }}" # stampa il nome utente
+
+...
