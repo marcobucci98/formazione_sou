@@ -19,14 +19,17 @@ Imposta l'immagine del container :
 Imposta l'uso di bash come shell : 
 `SHELL ["/bin/bash", "-c"]`
 
-Installazione di pip e pulizia della cache : 
-`RUN dnf install -y python3-pip && dnf clean all`
+Installazione di pip e pulizia della cache e Installa Ansible tramite pip senza salvare la cache: 
+`RUN dnf install -y python3-pip &&\`
+`dnf clean all &\`
+`pip3 install --no-cache-dir ansible-core`
 
-Crea un utente chiamato "an-vault" con UID 1000 e la sua cartella home : 
+Creazione utente con la sua home : 
 `RUN useradd -m -u 1000 an-vault`
 
-Installa Ansible tramite pip senza salvare la cache : 
-`RUN pip3 install --no-cache-dir ansible-core`
+Imposta l'utente, il container verrà utilizzato tramite l'utente `an-vault` : 
+
+`USER an-vault`
 
 Imposta area di lavoro : 
 `WORKDIR /home/an-vault/vault/`
@@ -43,17 +46,9 @@ Cifratura del file :
 
 `RUN echo "V4ul7" > pass.txt && \`
 
-   ` ansible-vault encrypt --vault-id pass.txt id.yml && \`
+` ansible-vault encrypt --vault-id pass.txt id.yml && \`
 
-   ` rm pass.txt && \`
-
-   ` chown an-vault:an-vault id.yml && \`
-
-   ` chmod 644 id.yml`
-
-Imposta l'utente, il container verrà utilizzato tramite l'utente `an-vault` : 
-
-`USER an-vault`
+` rm pass.txt && \`
 
 
 ### id.yml 
