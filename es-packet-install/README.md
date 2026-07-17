@@ -43,7 +43,7 @@ Copia dei file necessari nell'area di lavoro :
 
 Il playbook che verrà eseguito : 
 
-Titolo : `- name: Gestione pacchetti # nome del Play`
+Titolo : `- name: Gestione pacchetti `
 
 Specifica su quali macchine eseguire il playbook : `hosts: localhost`
 
