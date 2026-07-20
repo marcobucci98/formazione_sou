@@ -1,0 +1,33 @@
+---
+
+- name: Configurazione file limits.conf #nome 
+
+  hosts: localhost # indica che il playbook deve essere eseguito sulla macchina locale 
+  
+  connection: local # esegue i comandi direttamente in locale
+  
+  become: true # privilegi root
+  
+  vars: #variabili
+
+    target_user: "jinjauser"
+    
+    # assegna a 'nofile_limit' il valore 10000 se l'ambiente è produzione 'prod', altrimenti assegna 1000 per tutti gli altri ambienti.
+    # se 'environment_type' non è definita, il filtro default('dev') usa 'dev' come valore di default
+    nofile_limit: "{{ 10000 if (environment_type | default('dev')) == 'prod' else 1000 }}"
+
+  tasks: # azioni
+    - name: Aggiungi/Aggiorna i limiti utente # nome
+      ansible.builtin.blockinfile: # modulo
+
+        path: /etc/security/limits.conf # percorso del file da modificare
+        
+        # stabilisce le righe di commento che delimitano l'inizio e la fine del blocco
+        marker: "# {mark} ANSIBLE MANAGED BLOCK {{ target_user }}"
+        
+        # block contiene il testo effettivo da inserire 
+        block: |          
+          {{ target_user }} nofile {{ nofile_limit }}
+          {{ target_user }} nofile {{ nofile_limit }}
+
+...

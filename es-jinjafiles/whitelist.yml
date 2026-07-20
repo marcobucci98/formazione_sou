@@ -1,0 +1,31 @@
+---
+
+- name: Configurazione Whitelist
+  hosts: localhost
+  connection: local
+  become: true
+
+  vars:
+    # utenti
+    whitelist:
+      - "alice"
+      - "marco"
+      - "francesco"
+
+  tasks: #azioni, nome modulo e file 
+    - name: Utenti in whitelist
+      ansible.builtin.blockinfile:
+        path: /etc/security/access.conf
+        
+        # regex
+        # ricerca di "- : ALL : ALL" 
+        insertbefore: '^\-\s*:\s*ALL\s*:\s*ALL'
+        
+        # regole 
+        block: |
+          # Regole di accesso consentito per la whitelist :
+          {% for user in whitelist %}
+          {{ user }} : ALL
+          {% endfor %}
+
+...
