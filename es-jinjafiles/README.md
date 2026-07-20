@@ -76,20 +76,6 @@ Verranno poi definite le azioni da compiere, nome, il modulo da utilizzare, perc
 
 `...`
 
-## AVVIO E VERIFICA
-
-1. Scarica la cartella sul computer.
-2. Aprire il terminale e posizionati nella directory del progetto.
-3. Lanciare il comando `podman build -t nome_immagine . `
-- L'opzione `-t`, permette di taggare l'immagine appena buildata.
-- Il `.` alla fine del comando, permette di prendere il Dockerfile che abbiamo nella cartella locale per creare l'immagine.
-4. Una volta completato il setup dell'immagine lanciare il comando `podman run -it --name nome_container nome_immagine `
-5. Ora usiamo il comando `ansible-playbook user_settings.yml` per eseguire il file `user_settings.yml`.
-- Lanciando il comando in questo modo, verrà impostato il valore di default 1000.
-- Lanciando invece `ansible-playbook user_settings.yml -e "environment_type=prod" ` verrà impostato il valore 10000.
-6. Per fare la verifica, andiamo a leggere il file `cat /etc/security/limits.conf `
-
-
 ### whitelist.yml
 
 Il file `whitelist` ci manda alla seconda parte, viene impostato lo stato della macchina: nome, host target, connection, privilegi root e l'utente bersaglio e gli utenti da aggiungere in whitelist.
