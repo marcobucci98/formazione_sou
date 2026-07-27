@@ -1,7 +1,5 @@
  pipeline {
-    agent {
-        docker {
-            label 'rockylinux:9'
+    agent { label 'rockylinux:9'
         }
     }
 
