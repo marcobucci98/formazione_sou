@@ -1,52 +1,19 @@
 pipeline {
-    agent { 
+    agent {
         docker {
             image 'rockylinux/rockylinux:9'
         }
     }
-    
+
     stages {
-        stage('messaggio') {
+        stage('stage1') {
             steps {
-                sh 'echo ciao'
-            }
-        }
-
-        stage('azioni in parallelo') {
-            parallel {
-                stage ('test paralleli 1'){ 
-                    steps {
-                        sh 'echo par'
-                    }
-                }
-
-                stage('test paralleli 2') {
-                    steps {
-                        sh 'echo ciao'
+                dir('/home/jenkins/Documents') {
+                    script {
+                        sh 'echo "ciao" > jenkinswashere.txt'
                     }
                 }
             }
         }
     }
-
-    post {
-        
-        always {
-            sh 'echo ESEGUI SEMPRE'
-        }
-
-        success {
-            sh 'echo SUCCESS'
-        }
-
-        failure {
-            sh 'echo FALLITO'
-        }
-
-        changed {
-            sh 'echo STATO VARIATO'
-        }
-        
-    }
-    
 }
