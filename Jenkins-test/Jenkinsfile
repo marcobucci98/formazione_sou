@@ -1,7 +1,5 @@
  pipeline {
-    agent { label 'rockylinux:9'
-        }
-    }
+    agent { label 'rockylinux:9'}
 
     stages {
         stage('stage1') {
