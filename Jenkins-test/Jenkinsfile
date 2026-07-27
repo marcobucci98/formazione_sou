@@ -1,0 +1,19 @@
+pipeline {
+    agent {
+        docker {
+            image 'rockylinux/rockylinux:9'
+        }
+    }
+
+    stages {
+        stage('stage1') {
+            steps {
+                dir('Documents') {
+                    script {
+                        sh 'echo "ciao" > jenkinswashere.txt'
+                    }
+                }
+            }
+        }
+    }
+}
