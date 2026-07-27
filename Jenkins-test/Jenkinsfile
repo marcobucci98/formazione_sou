@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('stage1') {
             steps {
-                dir('/home/jenkins/Documents') {
+                dir('Documents') {
                     script {
                         sh 'echo "ciao" > jenkinswashere.txt'
                     }
