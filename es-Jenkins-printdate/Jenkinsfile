@@ -1,0 +1,39 @@
+pipeline {
+    agent {
+        docker {
+            image 'rockylinux/rockylinux:9'
+        }
+    }
+    stages {
+        stage('Controllo & Build') {
+            steps {
+                script {
+
+                    // inizializzato l'oggetto Date 
+                    def day = new Date()
+                    
+                    // impostazione del formato e orario
+                    def day_name = day.format('EEEE', TimeZone.getTimeZone('Europe/Rome'))
+                    
+                    // ottiene il giorno della settimana, viene poi calcolato un numero da 1 a 7 da associare ai giorni
+                    def num_day = day.getAt(Calendar.DAY_OF_WEEK)
+                
+                    //stampa del giorno corrente
+                    echo "Oggi è: ${day_name}"
+
+                    // controllo per la verifica
+                    if (num_day == Calendar.SATURDAY || num_day == Calendar.SUNDAY) {
+                        // warning per i giorni del weekend                    
+                        echo "Oggi è ${day_name}! Nessuna build programmata nel weekend."                        
+                    } 
+                
+                    else {
+                        //stampa ed esecuzione
+                        echo "Giorno : ${day_name}: Esecuzione..."
+
+                    }
+                }
+            }
+        }
+    }
+}
